@@ -1,0 +1,32 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies and Build
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Build and Push Docker Image
+        run: |
+          cd frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sicksick-frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/sicksick-frontend:latest
