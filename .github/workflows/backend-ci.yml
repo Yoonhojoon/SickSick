@@ -21,15 +21,21 @@ jobs:
           distribution: 'temurin'
 
       - name: Change gradlew permissions
-        run: chmod +x ./gradlew
+        run: chmod +x backend/gradlew  # gradlew 실행 권한 추가
 
       - name: Build Backend
         run: |
           cd backend
           ./gradlew clean build
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build and Push Docker Image
         run: |
           cd backend
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/sicksick-backend:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/sicksick-backend:latest
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/sicksick-backend:latest .
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/sicksick-backend:latest
