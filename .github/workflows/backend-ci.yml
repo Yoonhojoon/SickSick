@@ -6,6 +6,7 @@ on:
       - 'backend/**'
     branches:
       - dev
+  workflow_dispatch:  
 
 jobs:
   build:
